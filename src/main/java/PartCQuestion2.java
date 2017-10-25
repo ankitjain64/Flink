@@ -5,6 +5,7 @@ import ops.FilterOp;
 import org.apache.flink.api.common.functions.JoinFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple;
+import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.streaming.api.TimeCharacteristic;
@@ -33,10 +34,11 @@ public class PartCQuestion2 {
                 withoutDelayStream = streamWithoutDelay.apply(new AggregateApplyFunction()).filter(new FilterOp());
         SingleOutputStreamOperator<Tuple3<TimeWindow, String, Long>>
                 withDelayStream = streamWithDelay.apply(new AggregateApplyFunction()).filter(new FilterOp());
-        DataStream<Integer> computedStream = withDelayStream.join(withoutDelayStream)
+        DataStream<Tuple1<Integer>> computedStream = withDelayStream.join
+                (withoutDelayStream)
                 .where(new JoinKeySelector()).equalTo(new JoinKeySelector())
                 .window(windowAssigner).apply(new CustomJoinFunction());
-        SingleOutputStreamOperator<Integer> sum = computedStream.keyBy(0).sum(0);
+        SingleOutputStreamOperator<Tuple1<Integer>> sum = computedStream.keyBy(0).sum(0);
         sum.print();
         executionEnvironment.execute("PartCQuestion2_" + allowedLateness);
     }
@@ -52,12 +54,12 @@ public class PartCQuestion2 {
 
     private static class CustomJoinFunction implements
             JoinFunction<Tuple3<TimeWindow, String, Long>, Tuple3<TimeWindow,
-                    String, Long>, Integer> {
+                    String, Long>, Tuple1<Integer>> {
         @Override
-        public Integer join(Tuple3<TimeWindow, String, Long>
-                                    inputOne, Tuple3<TimeWindow,
+        public Tuple1<Integer> join(Tuple3<TimeWindow, String, Long>
+                                            inputOne, Tuple3<TimeWindow,
                 String, Long> inputTwo) throws Exception {
-            return 1;
+            return new Tuple1<>(1);
         }
     }
 }
