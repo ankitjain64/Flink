@@ -14,8 +14,7 @@ public class AggregateApplyFunction implements WindowFunction<Tuple3<Long, Strin
     @Override
     public void apply(Tuple tuple, TimeWindow window,
                       Iterable<Tuple3<Long, String, Long>> input,
-                      Collector<Tuple3<TimeWindow, String, Long>> out) throws
-            Exception {
+                      Collector<Tuple3<TimeWindow, String, Long>> out) throws Exception {
         if (input == null) {
             return;
         }

@@ -21,6 +21,7 @@ import static org.apache.flink.streaming.api.environment.StreamExecutionEnvironm
 
 public class PartCQuestion1 {
     public static void main(String[] args) throws Exception {
+
         StreamExecutionEnvironment executionEnvironment = getExecutionEnvironment();
         DataSourceBuilder.DataSource fileDataSource = DataSourceBuilder.createDataSource(args[0]);
         boolean disjoint = isDisjoint(args[1]);
