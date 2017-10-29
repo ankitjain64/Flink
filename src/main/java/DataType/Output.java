@@ -28,7 +28,7 @@ public class Output {
     @Override
     public String toString() {
         return "Count=" + count +
-                ", Type='" + type ;
+                ", Type=" + type ;
 
     }
 }
