@@ -29,39 +29,10 @@ public class PartCQuestion2 {
         WindowedStream<Tuple3<Long, String, Long>, Tuple, TimeWindow> streamWithoutDelay = keyedStream.window(windowAssigner);
         WindowedStream<Tuple3<Long, String, Long>, Tuple, TimeWindow> streamWithDelay = streamWithoutDelay.allowedLateness(seconds(allowedLateness));
 
-        /*SingleOutputStreamOperator<Tuple2<TimeWindow, Output>>
-                withoutDelayStream = streamWithoutDelay.apply(new AggregateApplyFunction()).filter(new FilterOp());*/
-
         SingleOutputStreamOperator<Tuple2<TimeWindow, Output>>
                 withDelayStream = streamWithDelay.apply(new AggregateApplyFunction()).filter(new FilterOp());
 
-
-        /* DataStream<Tuple1<Integer>> computedStream = withDelayStream.join
-                (withoutDelayStream)
-                .where(new JoinKeySelector()).equalTo(new JoinKeySelector())
-                .window(windowAssigner).apply(new CustomJoinFunction());
-        SingleOutputStreamOperator<Tuple1<Integer>> sum = computedStream.keyBy(0).sum(0);*/
         withDelayStream.print();
         executionEnvironment.execute("PartCQuestion2_" + allowedLateness);
-    }
-
-    private static class JoinKeySelector implements
-            KeySelector<Tuple3<TimeWindow, String, Long>, String> {
-        @Override
-        public String getKey(Tuple3<TimeWindow, String, Long>
-                                     tuple) throws Exception {
-            return tuple.f0.toString() + "_" + tuple.f1 + "_" + tuple.f2;
-        }
-    }
-
-    private static class CustomJoinFunction implements
-            JoinFunction<Tuple3<TimeWindow, String, Long>, Tuple3<TimeWindow,
-                    String, Long>, Tuple1<Integer>> {
-        @Override
-        public Tuple1<Integer> join(Tuple3<TimeWindow, String, Long>
-                                            inputOne, Tuple3<TimeWindow,
-                String, Long> inputTwo) throws Exception {
-            return new Tuple1<>(1);
-        }
     }
 }
