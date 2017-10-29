@@ -1,8 +1,10 @@
+import DataType.Output;
 import ops.AggregateApplyFunction;
 import ops.CreateInputView;
 import ops.EventTimeAssigner;
 import ops.FilterOp;
 import org.apache.flink.api.java.tuple.Tuple;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.streaming.api.TimeCharacteristic;
@@ -36,7 +38,7 @@ public class PartCQuestion1 {
         } else {
             windowedStream = keyedStream.window(SlidingEventTimeWindows.of(Time.seconds(60), Time.seconds(1)));
         }
-        SingleOutputStreamOperator<Tuple3<TimeWindow, String, Long>> stream =
+        SingleOutputStreamOperator<Tuple2<TimeWindow, Output>> stream =
                 windowedStream.apply(new AggregateApplyFunction()).filter(new FilterOp());
         stream.print();
         executionEnvironment.execute("PartCQuestion1_" + disjoint);

@@ -1,6 +1,8 @@
 package ops;
 
+import DataType.Output;
 import org.apache.flink.api.java.tuple.Tuple;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
@@ -10,11 +12,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AggregateApplyFunction implements WindowFunction<Tuple3<Long, String, Long>,
-        Tuple3<TimeWindow, String, Long>, Tuple, TimeWindow> {
+        Tuple2<TimeWindow, Output>, Tuple, TimeWindow> {
     @Override
     public void apply(Tuple tuple, TimeWindow window,
                       Iterable<Tuple3<Long, String, Long>> input,
-                      Collector<Tuple3<TimeWindow, String, Long>> out) throws Exception {
+                      Collector<Tuple2<TimeWindow, Output>> out) throws Exception {
         if (input == null) {
             return;
         }
@@ -29,7 +31,7 @@ public class AggregateApplyFunction implements WindowFunction<Tuple3<Long, Strin
         for (Map.Entry<String, Long> entry : typeVsLong.entrySet()) {
             String type = entry.getKey();
             Long value = entry.getValue();
-            out.collect(new Tuple3<>(window, type, value));
+            out.collect(new Tuple2<>(window, new Output(type,value)));
         }
     }
 }
