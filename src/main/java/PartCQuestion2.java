@@ -28,18 +28,21 @@ public class PartCQuestion2 {
         TumblingEventTimeWindows windowAssigner = TumblingEventTimeWindows.of(seconds(60));
         WindowedStream<Tuple3<Long, String, Long>, Tuple, TimeWindow> streamWithoutDelay = keyedStream.window(windowAssigner);
         WindowedStream<Tuple3<Long, String, Long>, Tuple, TimeWindow> streamWithDelay = streamWithoutDelay.allowedLateness(seconds(allowedLateness));
-        SingleOutputStreamOperator<Tuple2<TimeWindow, Output>>
-                withoutDelayStream = streamWithoutDelay.apply(new AggregateApplyFunction()).filter(new FilterOp());
+
+        /*SingleOutputStreamOperator<Tuple2<TimeWindow, Output>>
+                withoutDelayStream = streamWithoutDelay.apply(new AggregateApplyFunction()).filter(new FilterOp());*/
+
         SingleOutputStreamOperator<Tuple2<TimeWindow, Output>>
                 withDelayStream = streamWithDelay.apply(new AggregateApplyFunction()).filter(new FilterOp());
 
-       /* DataStream<Tuple1<Integer>> computedStream = withDelayStream.join
+
+        /* DataStream<Tuple1<Integer>> computedStream = withDelayStream.join
                 (withoutDelayStream)
                 .where(new JoinKeySelector()).equalTo(new JoinKeySelector())
                 .window(windowAssigner).apply(new CustomJoinFunction());
-        SingleOutputStreamOperator<Tuple1<Integer>> sum = computedStream.keyBy(0).sum(0);
-        sum.print();
-        executionEnvironment.execute("PartCQuestion2_" + allowedLateness);*/
+        SingleOutputStreamOperator<Tuple1<Integer>> sum = computedStream.keyBy(0).sum(0);*/
+        withDelayStream.print();
+        executionEnvironment.execute("PartCQuestion2_" + allowedLateness);
     }
 
     private static class JoinKeySelector implements
