@@ -2,19 +2,9 @@ package ops;
 
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks;
-import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
 import org.apache.flink.streaming.api.watermark.Watermark;
 
 import javax.annotation.Nullable;
-
-
-class A extends AscendingTimestampExtractor{
-
-    @Override
-    public long extractAscendingTimestamp(Object element) {
-        return 0;
-    }
-}
 
 public class EventTimeAssigner implements AssignerWithPeriodicWatermarks<Tuple3<Long, String, Long>> {
     private Long timeStamp;
