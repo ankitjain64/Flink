@@ -20,6 +20,8 @@ public class AggregateApplyFunction implements WindowFunction<Tuple3<Long, Strin
         if (input == null) {
             return;
         }
+        //Although this map is not required as we have keyed by, but still
+        // using for genericness
         Map<String, Long> typeVsLong = new HashMap<>();
         for (Tuple3<Long, String, Long> row : input) {
             Long existing = typeVsLong.get(row.f1);
@@ -31,7 +33,7 @@ public class AggregateApplyFunction implements WindowFunction<Tuple3<Long, Strin
         for (Map.Entry<String, Long> entry : typeVsLong.entrySet()) {
             String type = entry.getKey();
             Long value = entry.getValue();
-            out.collect(new Tuple2<>(window, new Output(type,value)));
+            out.collect(new Tuple2<>(window, new Output(type, value)));
         }
     }
 }

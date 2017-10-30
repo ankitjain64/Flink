@@ -27,7 +27,7 @@ public class PartCQuestion2 {
         DataStreamSource<Tuple4<Integer, Integer, Long, String>> inputFileSourceStream = executionEnvironment.addSource(fileDataSource, "inputFileSource");
         executionEnvironment.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         KeyedStream<Tuple3<Long, String, Long>, Tuple> keyedStream = inputFileSourceStream.map(new CreateInputView())
-                .assignTimestampsAndWatermarks(new EventTimeAssigner()).keyBy(2);
+                .assignTimestampsAndWatermarks(new EventTimeAssigner()).keyBy(1);
 
         TumblingEventTimeWindows windowAssigner = TumblingEventTimeWindows.of(seconds(60));
         WindowedStream<Tuple3<Long, String, Long>, Tuple, TimeWindow> streamWithoutDelay = keyedStream.window(windowAssigner);
